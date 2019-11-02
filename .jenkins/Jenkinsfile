@@ -1,0 +1,20 @@
+pipeline {
+    agent {
+        docker {
+            image 'openjdk:11.0-jdk-stretch'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
+    environment {
+        Toolname = "Jenkins"
+    }
+    stages {
+        stage("Build") {
+            steps {
+                git url: "https://github.com/udoh/jenkins-maven.git"
+                sh './mvnw clean package'
+                archiveArtifacts('target/*.jar')
+            }
+        }
+    }
+}
